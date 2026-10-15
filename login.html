@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Connexion — ScolACI</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --card-border: #334155;
+      --primary: #8b5cf6;
+      --primary-hover: #7c3aed;
+      --border: #334155;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --radius: 16px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
+
+    .login-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 36px 32px; width: 100%; max-width: 420px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3); }
+
+    .brand { text-align: center; margin-bottom: 28px; }
+    .brand-logo { font-size: 36px; display: inline-block; margin-bottom: 8px; }
+    .brand h1 { font-size: 24px; font-weight: 800; color: var(--text); }
+    .brand p { color: var(--text-muted); font-size: 13px; margin-top: 4px; }
+
+    .form-group { margin-bottom: 18px; }
+    .form-group label { display: block; font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; }
+    input, select { width: 100%; padding: 12px 14px; border: 1px solid var(--border); border-radius: 10px; font-size: 14px; outline: none; background: #0f172a; color: #fff; transition: border-color 0.2s; font-family: inherit; }
+    input:focus, select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2); }
+
+    .btn-submit { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; transition: background 0.2s; margin-top: 8px; }
+    .btn-submit:hover { background: var(--primary-hover); }
+  </style>
+</head>
+<body>
+
+  <div class="login-card">
+    <div class="brand">
+      <span class="brand-logo">🎓</span>
+      <h1>ScolACI</h1>
+      <p>Système de Gestion Scolaire & Universitaire</p>
+    </div>
+
+    <form onsubmit="handleLogin(event)">
+      <div class="form-group">
+        <label for="role">Profil / Espace</label>
+        <select id="role" required>
+          <option value="SUPER_ADMIN">👑 Super Administrateur (Réseau)</option>
+          <option value="ADMIN">🏛️ Administration Établissement</option>
+          <option value="TEACHER">👨‍🏫 Enseignant / Professeur</option>
+          <option value="STUDENT">👨‍🎓 Élève / Étudiant</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="identifier">Identifiant / Matricule / Code</label>
+        <input type="text" id="identifier" placeholder="Entrez votre identifiant" required>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Mot de passe</label>
+        <input type="password" id="password" placeholder="••••••••" required>
+      </div>
+
+      <button type="submit" class="btn-submit">Se Connecter ➔</button>
+    </form>
+  </div>
+
+  <script>
+    function handleLogin(e) {
+      e.preventDefault();
+
+      const role = document.getElementById('role').value;
+      const identifier = document.getElementById('identifier').value.trim();
+
+      // Sauvegarde des informations de session
+      localStorage.setItem('scolaci_user_role', role);
+      localStorage.setItem('scolaci_user_id', identifier);
+
+      // Redirection dynamique
+      if (role === 'SUPER_ADMIN' || identifier.toLowerCase().includes('superadmin')) {
+        window.location.href = 'pages/super-admin/super-admin-dashboard.html';
+      } else if (role === 'ADMIN' || identifier.toLowerCase().includes('admin')) {
+        window.location.href = 'pages/admin/admin-dashboard.html';
+      } else if (role === 'TEACHER' || identifier.toLowerCase().startsWith('prf')) {
+        window.location.href = 'pages/teacher/teacher-dashboard.html';
+      } else {
+        window.location.href = 'pages/student/student-dashboard.html';
+      }
+    }
+  </script>
+</body>
+</html>

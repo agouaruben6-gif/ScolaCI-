@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ScolACI — Le Portail Éducatif Intelligent de Côte d'Ivoire</title>
+  <style>
+    :root {
+      --bg-main: #f5f5f7;
+      --card-bg: #ffffff;
+      --text-primary: #1d1d1f;
+      --text-secondary: #86868b;
+      --accent-blue: #0071e3;
+      --accent-blue-hover: #0077ed;
+      --accent-green: #34c759;
+      --accent-purple: #af52de;
+      --accent-orange: #ff9500;
+      --border-light: rgba(0, 0, 0, 0.08);
+      --shadow-base: 0 4px 16px rgba(0, 0, 0, 0.04);
+      --shadow-hover: 0 20px 32px rgba(0, 0, 0, 0.12);
+      --ease-apple: cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+      background-color: var(--bg-main);
+      color: var(--text-primary);
+      line-height: 1.5;
+      letter-spacing: -0.022em;
+      -webkit-font-smoothing: antialiased;
+      padding-bottom: 80px;
+    }
+
+    /* Navbar avec Effet Flou (Glassmorphism) */
+    .navbar {
+      background-color: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      border-bottom: 1px solid var(--border-light);
+      padding: 16px 24px;
+    }
+
+    .nav-container {
+      max-width: 1080px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand {
+      font-size: 22px;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-green));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .nav-link {
+      font-size: 14px;
+      color: var(--text-primary);
+      text-decoration: none;
+      opacity: 0.8;
+      transition: opacity 0.2s ease;
+    }
+
+    .nav-link:hover {
+      opacity: 1;
+    }
+
+    .btn-login {
+      background: linear-gradient(135deg, var(--accent-blue), #005bb5);
+      color: #ffffff;
+      padding: 8px 20px;
+      border-radius: 980px;
+      font-size: 14px;
+      font-weight: 500;
+      text-decoration: none;
+      box-shadow: 0 2px 8px rgba(0, 113, 227, 0.3);
+      transition: all 0.25s ease;
+    }
+
+    .btn-login:hover {
+      transform: scale(1.03);
+      box-shadow: 0 4px 12px rgba(0, 113, 227, 0.4);
+    }
+
+    /* Hero Section */
+    .hero {
+      text-align: center;
+      padding: 100px 20px 60px 20px;
+      max-width: 850px;
+      margin: 0 auto;
+    }
+
+    .hero-tag {
+      display: inline-block;
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent-blue);
+      margin-bottom: 12px;
+    }
+
+    .hero-title {
+      font-size: 58px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, #0071e3 0%, #af52de 50%, #ff2d55 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-sub {
+      font-size: 22px;
+      color: var(--text-secondary);
+      font-weight: 400;
+      line-height: 1.4;
+      margin-bottom: 32px;
+    }
+
+    .hero-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+    }
+
+    .btn-primary {
+      background-color: var(--accent-blue);
+      color: white;
+      padding: 14px 28px;
+      border-radius: 980px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: transform 0.2s ease, background-color 0.2s ease;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--accent-blue-hover);
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background-color: rgba(0, 0, 0, 0.05);
+      color: var(--text-primary);
+      padding: 14px 28px;
+      border-radius: 980px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: background-color 0.2s ease;
+    }
+
+    .btn-secondary:hover {
+      background-color: rgba(0, 0, 0, 0.08);
+    }
+
+    /* Sections */
+    .container {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 60px 24px;
+    }
+
+    .section-header {
+      text-align: center;
+      max-width: 700px;
+      margin: 0 auto 48px auto;
+    }
+
+    .section-badge {
+      font-size: 12px;
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      color: var(--accent-blue);
+    }
+
+    .section-title {
+      font-size: 36px;
+      font-weight: 700;
+      letter-spacing: -0.015em;
+      margin-top: 8px;
+    }
+
+    .section-desc {
+      font-size: 17px;
+      color: var(--text-secondary);
+      margin-top: 8px;
+    }
+
+    /* Grilles et Cartes */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 28px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+
+    .card {
+      background-color: var(--card-bg);
+      border-radius: 24px;
+      padding: 36px;
+      box-shadow: var(--shadow-base);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      transition: transform 0.4s var(--ease-apple), box-shadow 0.4s var(--ease-apple);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .card:hover {
+      transform: translateY(-8px) scale(1.01);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .card-icon {
+      font-size: 32px;
+      margin-bottom: 16px;
+    }
+
+    .card-title {
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .card-desc {
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    /* Section Statistiques / Impact */
+    .stats-banner {
+      background-color: #ffffff;
+      border-radius: 28px;
+      padding: 48px 32px;
+      box-shadow: var(--shadow-base);
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 32px;
+      text-align: center;
+      margin: 40px 0;
+    }
+
+    .stat-number {
+      font-size: 42px;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .stat-text {
+      font-size: 14px;
+      color: var(--text-secondary);
+      font-weight: 500;
+      margin-top: 4px;
+    }
+
+    /* FAQ Section */
+    .faq-item {
+      background-color: var(--card-bg);
+      border-radius: 16px;
+      padding: 24px 32px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow-base);
+    }
+
+    .faq-question {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .faq-answer {
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border-light);
+      padding: 40px 24px;
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-top: 60px;
+    }
+
+    footer a {
+      color: var(--accent-blue);
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="brand">ScolACI</a>
+      <div class="nav-links">
+        <a href="#mission" class="nav-link">Notre Mission</a>
+        <a href="#services" class="nav-link">Services</a>
+        <a href="#impact" class="nav-link">Impact</a>
+        <a href="#faq" class="nav-link">FAQ</a>
+        <a href="login.html" class="btn-login">Se connecter</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- En-tête / Hero Section -->
+  <header class="hero">
+    <span class="hero-tag">Innovation Éducative en Côte d'Ivoire</span>
+    <h1 class="hero-title">ScolACI</h1>
+    <p class="hero-sub">Le système de gestion scolaire tout-en-un conçu pour moderniser l'éducation, simplifier le suivi académique et rapprocher les familles des établissements.</p>
+    <div class="hero-buttons">
+      <a href="login.html" class="btn-primary">Accéder à mon espace &gt;</a>
+      <a href="#services" class="btn-secondary">Découvrir les modules</a>
+    </div>
+  </header>
+
+  <!-- Section Mission & But de l'Application -->
+  <section class="container" id="mission">
+    <div class="section-header">
+      <span class="section-badge">Pourquoi ScolACI ?</span>
+      <h2 class="section-title">Le but de la plateforme</h2>
+      <p class="section-desc">ScolACI répond au besoin critique de digitalisation et de transparence au sein du système éducatif ivoirien.</p>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div>
+          <div class="card-icon">⚡</div>
+          <h3 class="card-title">Digitalisation & Gain de Temps</h3>
+          <p class="card-desc">Fini les erreurs de saisie manuelle et les paperasses chronophages. ScolACI centralise l'administration, du calcul automatisé des moyennes semestrielles à l'édition instantanée des bulletins de notes aux normes nationales.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div>
+          <div class="card-icon">🤝</div>
+          <h3 class="card-title">Lien Famille-Établissement</h3>
+          <p class="card-desc">Offrez aux parents une visibilité en temps réel sur la scolarité de leurs enfants. Grâce au portail mobile, suivez l'assiduité, les notes, les retards et les communications importantes où que vous soyez.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Bannière d'Impact -->
+  <section class="container" id="impact">
+    <div class="stats-banner">
+      <div>
+        <div class="stat-number">100%</div>
+        <div class="stat-text">Digitalisé & Accès Sécurisé</div>
+      </div>
+      <div>
+        <div class="stat-number">24/7</div>
+        <div class="stat-text">Accès aux Notes et Bulletins</div>
+      </div>
+      <div>
+        <div class="stat-number">0 Papier</div>
+        <div class="stat-text">Gestion Écologique & Moderne</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section Modules / Services -->
+  <section class="container" id="services">
+    <div class="section-header">
+      <span class="section-badge">Services Intégrés</span>
+      <h2 class="section-title">Une suite complète d'outils</h2>
+      <p class="section-desc">Chaque rôle dispose d'un environnement adapté à ses besoins quotidiens.</p>
+    </div>
+
+    <div class="grid-3">
+      <div class="card">
+        <div>
+          <div class="card-icon">📊</div>
+          <h3 class="card-title">Saisie des Notes & Bulletins</h3>
+          <p class="card-desc">Calcul automatique des coefficients, des rangs et des moyennes générales de classe avec export PDF instantané.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div>
+          <div class="card-icon">⏱️</div>
+          <h3 class="card-title">Suivi des Présences</h3>
+          <p class="card-desc">Appel numérique direct en classe. Notification automatique adressée aux parents en cas d'absence non justifiée.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div>
+          <div class="card-icon">📅</div>
+          <h3 class="card-title">Planning & Emploi du Temps</h3>
+          <p class="card-desc">Consultation dynamique des plannings de cours, des salles attribuées et des modifications d'horaires.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div>
+          <div class="card-icon">📚</div>
+          <h3 class="card-title">Cahier de Texte Digital</h3>
+          <p class="card-desc">Consultation des devoirs à faire, des exercices corrigés et des ressources pédagogiques déposées par les enseignants.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div>
+          <div class="card-icon">👨‍👩‍👧</div>
+          <h3 class="card-title">Espace Parent</h3>
+          <p class="card-desc">Suivi détaillé de plusieurs enfants depuis un seul compte sécurisé, avec alertes de discipline et bulletins d'évaluation.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div>
+          <div class="card-icon">🏛️</div>
+          <h3 class="card-title">Administration Scolaire</h3>
+          <p class="card-desc">Gestion des inscriptions, registres d'élèves, affectation du corps professoral et statistiques globales de l'établissement.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section FAQ -->
+  <section class="container" id="faq">
+    <div class="section-header">
+      <span class="section-badge">Questions Fréquentes</span>
+      <h2 class="section-title">Tout ce que vous devez savoir</h2>
+    </div>
+
+    <div class="faq-item">
+      <h3 class="faq-question">Comment obtenir mon matricule ou mes accès ?</h3>
+      <p class="faq-answer">Vos identifiants (matricule et mot de passe provisoire) sont transmis par la direction ou le secrétariat de votre établissement scolaire lors de l'inscription.</p>
+    </div>
+
+    <div class="faq-item">
+      <h3 class="faq-question">ScolACI est-il accessible sur téléphone portable ?</h3>
+      <p class="faq-answer">Oui, ScolACI bénéficie d'une interface responsive optimisée pour smartphone, tablette et ordinateur, garantissant un accès fluide à tout moment.</p>
+    </div>
+
+    <div class="faq-item">
+      <h3 class="faq-question">Comment les parents peuvent-ils suivre plusieurs enfants ?</h3>
+      <p class="faq-answer">Grâce au profil Parent, il est possible de rattacher plusieurs matricules à un seul compte parent pour suivre l'ensemble de la fratrie en un coup d'œil.</p>
+    </div>
+  </section>
+
+  <!-- Pied de page -->
+  <footer>
+    <p>&copy; 2026 ScolACI — Portail de Gestion Éducative. Tous droits réservés.</p>
+    <p style="margin-top: 8px;"><a href="#">Politique de confidentialité</a> | <a href="#">Conditions d'utilisation</a> | <a href="#">Support Technique</a></p>
+  </footer>
+
+</body>
+</html>

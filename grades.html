@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ScolACI — Relevé de Notes</title>
+  <style>
+    :root {
+      --bg-main: #f5f5f7;
+      --card-bg: #ffffff;
+      --text-primary: #1d1d1f;
+      --text-secondary: #86868b;
+      --accent-blue: #0071e3;
+      --border-light: rgba(0, 0, 0, 0.08);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+      background-color: var(--bg-main);
+      color: var(--text-primary);
+      padding: 30px 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .header-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .back-link {
+      color: var(--accent-blue);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .card {
+      background-color: var(--card-bg);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+    }
+
+    h1 {
+      font-size: 28px;
+      margin-bottom: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    th, td {
+      padding: 14px 16px;
+      text-align: left;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    th {
+      color: var(--text-secondary);
+      font-size: 13px;
+      text-transform: uppercase;
+    }
+
+    .grade-badge {
+      font-weight: 700;
+      color: var(--accent-blue);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="header-nav">
+      <a href="dashboard.html" class="back-link">&lt; Retour au Tableau de Bord</a>
+    </div>
+
+    <div class="card">
+      <h1>Relevé de Notes Semestriel</h1>
+      <table>
+        <thead>
+          <tr>
+            <th>Matière</th>
+            <th>Coefficient</th>
+            <th>Note / 20</th>
+          </tr>
+        </thead>
+        <tbody id="gradesTableBody">
+          <tr>
+            <td colspan="3">Chargement des notes...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    checkAuth();
+
+    const user = JSON.parse(localStorage.getItem('scolaci_user'));
+
+    async function loadGrades() {
+      if (!user) return;
+
+      try {
+        const response = await fetch(`${CONFIG.API_BASE_URL}/grades/student/${user.matricule}`);
+        const data = await response.json();
+
+        const tbody = document.getElementById('gradesTableBody');
+        tbody.innerHTML = '';
+
+        if (data.grades.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="3">Aucune note disponible pour le moment.</td></tr>';
+          return;
+        }
+
+        data.grades.forEach(item => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td><strong>${item.subject}</strong></td>
+            <td>Coef ${item.coef}</td>
+            <td class="grade-badge">${item.grade} / 20</td>
+          `;
+          tbody.appendChild(row);
+        });
+
+      } catch (error) {
+        console.error('Erreur lors du chargement des notes:', error);
+      }
+    }
+
+    loadGrades();
+  </script>
+</body>
+</html>

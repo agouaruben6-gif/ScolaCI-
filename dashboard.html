@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tableau de Bord — ScolACI</title>
+  <style>
+    :root {
+      --bg-main: #f5f5f7;
+      --card-bg: #ffffff;
+      --text-primary: #1d1d1f;
+      --text-secondary: #86868b;
+      --accent-blue: #0071e3;
+      --accent-blue-hover: #0077ed;
+      --accent-red: #ff3b30;
+      --accent-green: #34c759;
+      --accent-purple: #af52de;
+      --accent-orange: #ff9500;
+      --border-light: rgba(0, 0, 0, 0.08);
+      --shadow-base: 0 4px 16px rgba(0, 0, 0, 0.04);
+      --shadow-hover: 0 20px 32px rgba(0, 0, 0, 0.12);
+      --ease-apple: cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+      background-color: var(--bg-main);
+      color: var(--text-primary);
+      line-height: 1.5;
+      letter-spacing: -0.022em;
+      -webkit-font-smoothing: antialiased;
+      padding-bottom: 80px;
+    }
+
+    /* Barre de Navigation (Glassmorphism Style Apple) */
+    .navbar {
+      background-color: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      border-bottom: 1px solid var(--border-light);
+      padding: 14px 24px;
+    }
+
+    .nav-container {
+      max-width: 1080px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand {
+      font-size: 22px;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-green));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-decoration: none;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-size: 14px;
+    }
+
+    .user-info {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+
+    .user-name {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .role-badge {
+      background-color: rgba(0, 113, 227, 0.1);
+      color: var(--accent-blue);
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 16px;
+      box-shadow: 0 2px 8px rgba(175, 82, 222, 0.3);
+    }
+
+    .btn-logout {
+      background-color: rgba(255, 59, 48, 0.1);
+      color: var(--accent-red);
+      padding: 6px 14px;
+      border-radius: 980px;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .btn-logout:hover {
+      background-color: rgba(255, 59, 48, 0.2);
+    }
+
+    /* Conteneur Principal */
+    .container {
+      max-width: 1080px;
+      margin: 40px auto 0 auto;
+      padding: 0 24px;
+    }
+
+    .welcome-header {
+      margin-bottom: 32px;
+    }
+
+    .welcome-header h1 {
+      font-size: 38px;
+      font-weight: 700;
+      letter-spacing: -0.015em;
+      margin-bottom: 6px;
+    }
+
+    .welcome-header p {
+      font-size: 18px;
+      color: var(--text-secondary);
+    }
+
+    /* Statistiques / KPIs Dynamiques */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    .stat-card {
+      background-color: var(--card-bg);
+      padding: 24px;
+      border-radius: 20px;
+      box-shadow: var(--shadow-base);
+      transition: transform 0.4s var(--ease-apple), box-shadow 0.4s var(--ease-apple);
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.6);
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+    }
+
+    .stat-blue::before { background: linear-gradient(90deg, var(--accent-blue), #5ac8fa); }
+    .stat-green::before { background: linear-gradient(90deg, var(--accent-green), #30d158); }
+    .stat-orange::before { background: linear-gradient(90deg, var(--accent-orange), #ffcc00); }
+
+    .stat-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-secondary);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .stat-value {
+      font-size: 32px;
+      font-weight: 700;
+      margin-top: 8px;
+    }
+
+    .val-blue { color: var(--accent-blue); }
+    .val-green { color: var(--accent-green); }
+    .val-orange { color: var(--accent-orange); }
+
+    /* Grille de Modules */
+    .main-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+
+    .module-card {
+      background-color: var(--card-bg);
+      border-radius: 22px;
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 220px;
+      text-decoration: none;
+      color: inherit;
+      box-shadow: var(--shadow-base);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      transition: transform 0.4s var(--ease-apple), box-shadow 0.4s var(--ease-apple);
+    }
+
+    .module-card:hover {
+      transform: translateY(-8px) scale(1.01);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .module-title {
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .module-desc {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .module-link {
+      margin-top: 24px;
+      font-size: 14px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .color-purple { color: var(--accent-purple); }
+    .color-blue { color: var(--accent-blue); }
+    .color-orange { color: var(--accent-orange); }
+    .color-green { color: var(--accent-green); }
+
+    .module-card:hover .module-link {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Barre de Navigation -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="brand">ScolACI</a>
+      <div class="user-profile">
+        <div class="user-info">
+          <span class="user-name" id="userProfileName">Chargement...</span>
+          <span class="role-badge" id="userRoleBadge">ÉLÈVE</span>
+        </div>
+        <div class="avatar" id="userAvatar">U</div>
+        <a href="#" class="btn-logout" id="logoutBtn">Déconnexion</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Contenu Principal -->
+  <main class="container">
+    <div class="welcome-header">
+      <h1 id="welcomeTitle">Tableau de Bord</h1>
+      <p id="welcomeMessage">Bienvenue sur votre espace de gestion scolaire ScolACI.</p>
+    </div>
+
+    <!-- Statistiques dynamiques -->
+    <div class="stats-grid" id="statsGrid">
+      <div class="stat-card stat-blue">
+        <div class="stat-label">Moyenne Générale</div>
+        <div class="stat-value val-blue">15.8 / 20</div>
+      </div>
+      <div class="stat-card stat-green">
+        <div class="stat-label">Taux d'Assiduité</div>
+        <div class="stat-value val-green">98 %</div>
+      </div>
+      <div class="stat-card stat-orange">
+        <div class="stat-label">Devoirs à venir</div>
+        <div class="stat-value val-orange">3</div>
+      </div>
+    </div>
+
+    <!-- Modules applicatifs (Adaptés par Rôle) -->
+    <div class="main-grid" id="modulesGrid">
+      <!-- Injecté dynamiquement par JavaScript -->
+    </div>
+  </main>
+
+  <!-- Scripts JavaScript -->
+  <script src="js/config.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    // 1. Vérification de la session (garde de sécurité)
+    checkAuth();
+
+    // 2. Récupération des données de l'utilisateur connecté
+    const user = JSON.parse(localStorage.getItem('scolaci_user'));
+
+    if (user) {
+      // Éléments du DOM
+      const userProfileName = document.getElementById('userProfileName');
+      const userRoleBadge = document.getElementById('userRoleBadge');
+      const userAvatar = document.getElementById('userAvatar');
+      const welcomeTitle = document.getElementById('welcomeTitle');
+      const welcomeMessage = document.getElementById('welcomeMessage');
+      const modulesGrid = document.getElementById('modulesGrid');
+      const statsGrid = document.getElementById('statsGrid');
+
+      // Mise à jour de l'en-tête
+      userProfileName.textContent = user.name;
+      userRoleBadge.textContent = user.role;
+      userAvatar.textContent = user.name ? user.name.charAt(0).toUpperCase() : 'U';
+      welcomeTitle.textContent = `Bonjour, ${user.name}`;
+      welcomeMessage.textContent = `Connecté sous le matricule ${user.matricule}. Voici vos accès disponibles.`;
+
+      // 3. Rendu dynamique des modules selon le rôle
+      if (user.role === 'STUDENT') {
+        modulesGrid.innerHTML = `
+          <a href="grades.html" class="module-card">
+            <div>
+              <h2 class="module-title">Relevé de Notes</h2>
+              <p class="module-desc">Consultez vos évaluations, moyennes semestrielles et téléchargez vos bulletins d'évaluation.</p>
+            </div>
+            <div class="module-link color-purple">Consulter mes notes &gt;</div>
+          </a>
+          <a href="#" class="module-card">
+            <div>
+              <h2 class="module-title">Suivi des Présences</h2>
+              <p class="module-desc">Accédez à l'historique complet de vos présences, retards enregistrés et justificatifs.</p>
+            </div>
+            <div class="module-link color-blue">Voir mes présences &gt;</div>
+          </a>
+          <a href="#" class="module-card">
+            <div>
+              <h2 class="module-title">Emploi du Temps</h2>
+              <p class="module-desc">Consultez votre planning hebdomadaire interactif et les salles attribuées.</p>
+            </div>
+            <div class="module-link color-orange">Afficher le planning &gt;</div>
+          </a>
+        `;
+      } else if (user.role === 'PARENT') {
+        modulesGrid.innerHTML = `
+          <a href="grades.html" class="module-card">
+            <div>
+              <h2 class="module-title">Bulletins de l'Enfant</h2>
+              <p class="module-desc">Suivez les résultats académiques, les moyennes et les appréciations des professeurs.</p>
+            </div>
+            <div class="module-link color-purple">Voir les notes &gt;</div>
+          </a>
+          <a href="#" class="module-card">
+            <div>
+              <h2 class="module-title">Assiduité & Discipline</h2>
+              <p class="module-desc">Consultez les absences en temps réel, les retards signalés et soumettez vos justificatifs.</p>
+            </div>
+            <div class="module-link color-blue">Vérifier l'assiduité &gt;</div>
+          </a>
+        `;
+      } else if (user.role === 'TEACHER') {
+        statsGrid.innerHTML = `
+          <div class="stat-card stat-blue">
+            <div class="stat-label">Classes en Charge</div>
+            <div class="stat-value val-blue">4</div>
+          </div>
+          <div class="stat-card stat-green">
+            <div class="stat-label">Evaluations Saisies</div>
+            <div class="stat-value val-green">12</div>
+          </div>
+          <div class="stat-card stat-orange">
+            <div class="stat-label">Copies à Corriger</div>
+            <div class="stat-value val-orange">2</div>
+          </div>
+        `;
+
+        modulesGrid.innerHTML = `
+          <a href="#" class="module-card">
+            <div>
+              <h2 class="module-title">Saisie des Notes</h2>
+              <p class="module-desc">Attribuez les notes de devoirs, d'interrogations et d'examens semestriels par classe.</p>
+            </div>
+            <div class="module-link color-purple">Saisir des évaluations &gt;</div>
+          </a>
+          <a href="#" class="module-card">
+            <div>
+              <h2 class="module-title">Prise d'Appel (Présences)</h2>
+              <p class="module-desc">Effectuez l'appel numérique en direct en classe et enregistrez les absences/retards.</p>
+            </div>
+            <div class="module-link color-blue">Faire l'appel &gt;</div>
+          </a>
+          <a href="#" class="module-card">
+            <div>
+              <h2 class="module-title">Cahier de Texte</h2>
+              <p class="module-desc">Déposez les devoirs à faire, le résumé du cours dispensé et les pièces jointes.</p>
+            </div>
+            <div class="module-link color-green">Remplir le cahier &gt;</div>
+          </a>
+        `;
+      } else if (user.role === 'ADMIN') {
+        statsGrid.innerHTML = `
+          <div class="stat-card stat-blue">
+            <div class="stat-label">Total Élèves</div>
+            <div class="stat-value val-blue">1,240</div>
+          </div>
+          <div class="stat-card stat-green">
+            <div class="stat-label">Enseignants</div>
+            <div class="stat-value val-green">68</div>
+          </div>
+          <div class="stat-card stat-orange">
+            <div class="stat-label">Bulletins Générés</div>
+            <div class="stat-value val-orange">100 %</div>
+          </div>
+        `;
+
+        modulesGrid.innerHTML = `
+          <a href="#" class="module-card">
+            <div>
+              <h2 class="module-title">Gestion des Utilisateurs</h2>
+              <p class="module-desc">Créez, modifiez ou réinitialisez les accès des comptes élèves, parents et enseignants.</p>
+            </div>
+            <div class="module-link color-purple">Gérer les comptes &gt;</div>
+          </a>
+          <a href="#" class="module-card">
+            <div>
+              <h2 class="module-title">Structure & Classes</h2>
+              <p class="module-desc">Configurez les niveaux d'études, l'affectation des professeurs et les emplois du temps.</p>
+            </div>
+            <div class="module-link color-blue">Configurer l'école &gt;</div>
+          </a>
+          <a href="#" class="module-card">
+            <div>
+              <h2 class="module-title">Clôture & Bulletins</h2>
+              <p class="module-desc">Validez le calcul automatique des rangs généraux et imprimez les bulletins officiels.</p>
+            </div>
+            <div class="module-link color-green">Éditer les bulletins &gt;</div>
+          </a>
+        `;
+      }
+    }
+
+    // 4. Gestion de la Déconnexion
+    document.getElementById('logoutBtn').addEventListener('click', function(e) {
+      e.preventDefault();
+      logout();
+    });
+  </script>
+
+</body>
+</html>
